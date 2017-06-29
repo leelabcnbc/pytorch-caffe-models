@@ -44,7 +44,7 @@ class AlexNet(nn.Module):
         return x
 
 
-_register_dict('AlexNet', {
+_register_dict('alexnet', {
     'type': 'linear',
     'model': 'http://dl.caffe.berkeleyvision.org/bvlc_alexnet.caffemodel',
     'prototxt': 'https://raw.githubusercontent.com/BVLC/caffe/master/models/bvlc_alexnet/deploy.prototxt',
@@ -94,7 +94,7 @@ class CaffeNet(nn.Module):
         return x
 
 
-_register_dict('CaffeNet', {
+_register_dict('caffenet', {
     'type': 'linear',
     'model': 'http://dl.caffe.berkeleyvision.org/bvlc_reference_caffenet.caffemodel',
     'prototxt': 'https://raw.githubusercontent.com/BVLC/caffe/master/models/bvlc_reference_caffenet/deploy.prototxt',
