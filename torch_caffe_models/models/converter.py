@@ -30,6 +30,10 @@ def save_one_dataset(f_handle, dataset_to_save, data, name=None):
         print(f'{dataset_to_save} {name} done')
     else:
         print(f'{dataset_to_save} {name} done before')
+        # print out difference
+        data_old = f_handle[dataset_to_save][...]
+        assert data.shape == data_old.shape
+        print(abs(data_old - data).max())
 
 
 def convert_linear_model(model_properties):

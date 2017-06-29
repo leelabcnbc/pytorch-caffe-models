@@ -89,6 +89,7 @@ def load_linear_model(model_properties, debug=False):
                                                                  nn.MaxPool2d))
             input_data = load_one_dataset(f_out, '/debug/input')[0]
             # somehow, LRN layer doesn't work correctly under CPU.
+            # well. check test_LRN.py. looks like a numerical issue, instead of wrong implementation.
             model.cuda()
             model(Variable(FloatTensor(input_data).cuda()))
             # model(Variable(FloatTensor(input_data)))
