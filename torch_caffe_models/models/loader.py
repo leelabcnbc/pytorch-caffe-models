@@ -66,7 +66,7 @@ def _augment_module_pre(net: nn.Module, module_types=None) -> (dict, list):
     return callback_dict, remove_handles
 
 
-def load_linear_model(model_properties, debug=False):
+def load_linear_model(model_properties, debug=False, verbose=True):
     # first, load files
     model_dir = os.path.join(cache_dir, model_properties['id'])
     model_hdf5 = os.path.join(model_dir, 'model.hdf5')
@@ -77,7 +77,8 @@ def load_linear_model(model_properties, debug=False):
     with h5py.File(model_hdf5, 'r') as f_out:
         for param_idx, (param_name, param) in enumerate(model.named_parameters()):
             data, name = load_one_dataset(f_out, f'/weights/{param_idx}')
-            print(f'{name} -> {param_name}')
+            if verbose:
+                print(f'{name} -> {param_name}')
             assert data.shape == tuple(param.data.size())
             # assign data
             param.data[...] = FloatTensor(data)
@@ -96,13 +97,15 @@ def load_linear_model(model_properties, debug=False):
             # then check the callback
             for blob_idx, (x, y) in enumerate(callback_dict.items()):
                 ref_data, name = load_one_dataset(f_out, f'/debug/{blob_idx}')
-                print(f'{name} -> {x}')
+                if verbose:
+                    print(f'{name} -> {x}')
                 data_this = y['output'].cpu().numpy()
                 assert data_this.shape == ref_data.shape
                 assert np.all(np.isfinite(data_this))
                 assert np.all(np.isfinite(ref_data))
                 norm_ratio = norm((data_this - ref_data).ravel()) / norm(ref_data.ravel())
-                print(data_this.mean(), data_this.std(), norm_ratio)
+                if verbose:
+                    print(data_this.mean(), data_this.std(), norm_ratio)
                 assert norm_ratio < 1e-5
             model.cpu()
     return model
